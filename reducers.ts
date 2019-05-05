@@ -1,17 +1,48 @@
 import { Action } from 'redux';
 
-export const pingReducer = (state = { isPinging: false }, action: Action) => {
-  if (action.type === 'PING' || action.type === 'PONG') {
-    console.log('action: ', action);
-    console.log('state: ', state);
+type ActionWithPayload = Action & {
+  payload: {
+    login :string;
+  }
+}
+
+export const pingReducer = (state = {
+  isPinging: false,
+  counter: 0,
+}, action: ActionWithPayload) => {
+  if (
+    action.type === 'PING'
+    || action.type === 'PONG'
+    || action.type === 'FETCH_USER'
+    || action.type === 'FETCH_USER_FULFILLED'
+    || action.type === 'INCREMENT'
+    || action.type === 'INCREMENT_IF_ODD'
+  ) {
   }
   switch (action.type) {
     case 'PING':
-      return { isPinging: true };
+      return {
+        ...state,
+        isPinging: true,
+      };
 
     case 'PONG':
-      return { isPinging: false };
+      return {
+        ...state,
+        isPinging: false,
+      };
 
+    case 'FETCH_USER_FULFILLED':
+      return {
+        ...state,
+        [action.payload.login]: action.payload
+      };
+
+    case 'INCREMENT':
+      return {
+        ...state,
+        counter: state.counter + 1,
+      };
     default:
       return state;
   }
